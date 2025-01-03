@@ -7,6 +7,7 @@ public class Move : MonoBehaviour
     public bool chamDat;
     public float speed = 5f;
     public float jump = 3;
+    public float doublejump = 2;
     public float traiPhai;
 
     public Rigidbody2D rb;
@@ -42,15 +43,16 @@ public class Move : MonoBehaviour
     }
     private void Jump()
     {
-        if (chamDat == true)
+        if (doublejump>0)
         {
-            if (Input.GetKeyDown(KeyCode.Space) && chamDat)
+            if (Input.GetKeyDown(KeyCode.Space))
             {
                 rb.velocity = new Vector2(rb.velocity.x, jump);
-                chamDat = false;
+                doublejump = doublejump - 1;
             }
             anim.SetBool("jump", !chamDat);
-        }
+            Debug.Log(doublejump);
+        }        
 
     }
     private void Fall()
@@ -62,6 +64,7 @@ public class Move : MonoBehaviour
         if (collision.gameObject.CompareTag("Dat"))
         {
             chamDat = true;
+            doublejump = 2;
         }
     }
 

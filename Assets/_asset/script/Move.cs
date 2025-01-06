@@ -5,6 +5,8 @@ using UnityEngine;
 public class Move : MonoBehaviour
 {
     public bool chamDat;
+    bool nhay;
+    bool doubleJump;
     public float speed = 5f;
     public float jump = 3;
     public float doublejump = 2;
@@ -22,7 +24,7 @@ public class Move : MonoBehaviour
     {
         DiChuyen();
         Jump();
-        Fall();
+        //Fall();
     }
 
     private void DiChuyen()
@@ -43,34 +45,47 @@ public class Move : MonoBehaviour
     }
     private void Jump()
     {
-        if (doublejump>0)
+        if (Input.GetKeyDown(KeyCode.Space) && chamDat)
+        {
+            rb.velocity = new Vector2(rb.velocity.x, jump);
+            nhay = false;
+        }
+        if (Input.GetKeyDown(KeyCode.Space)&& chamDat)
+            {
+                doublejump = doublejump - 1;
+            }
+        anim.SetBool("jump", !nhay);
+        if (doublejump == 1)
         {
             if (Input.GetKeyDown(KeyCode.Space))
             {
                 rb.velocity = new Vector2(rb.velocity.x, jump);
-                doublejump = doublejump - 1;
             }
-            anim.SetBool("jump", !chamDat);
-            Debug.Log(doublejump);
-        }        
+            doubleJump = true;
+        }
+        if (doublejump == 0)
+        {            
+            anim.SetBool("doublejump", doubleJump);
+        }
 
+        Debug.Log(doublejump);
     }
-    private void Fall()
-    {
-        anim.SetBool("fall", !chamDat);  
-    }
+
+    //private void Fall()
+    //{
+    //    anim.SetBool("fall", !chamDat);  
+    //}
     private void OnCollisionEnter2D(Collision2D collision)
     {
         if (collision.gameObject.CompareTag("Dat"))
         {
+            Debug.Log(chamDat);
+            
             chamDat = true;
             doublejump = 2;
+            nhay = true;
+            doubleJump = false;
+            Debug.Log("dJ: "+ doubleJump);
         }
-    }
-
-    public void move(float move)
-    {
-        //Vector3 targetVelocity = new Vector2(move * 10, m_Rigidbody2D.velocity.y);
-        //m_Rigidbody2D.velocity = Vector3.SmoothDamp(m_Rigidbody2D.velocity, targetVelocity, ref m_Velocity, m_MovementSmoothing);
     }
 }
